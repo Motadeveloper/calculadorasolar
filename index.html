@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Calculadora Solar</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .result-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Calculadora Solar</h1>
+    <form id="calculatorForm" class="mt-4">
+        <div class="form-group">
+            <label for="totalConsumption">Consumo Total (KWH)</label>
+            <input type="number" class="form-control" id="totalConsumption" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+
+    <ul class="list-group result-list" id="resultList" style="display: none;">
+        <li class="list-group-item"><strong>Consumo Total (KWH):</strong> <span id="resultTotalConsumption"></span></li>
+        <li class="list-group-item"><strong>Média Mensal (KWH):</strong> <span id="resultAverageMonthly"></span></li>
+        <li class="list-group-item"><strong>Média Mensal + 20% (KWH):</strong> <span id="resultAverageMonthlyWithBuffer"></span></li>
+        <li class="list-group-item"><strong>Quantidade de Placas:</strong> <span id="resultPanelsNeeded"></span></li>
+        <li class="list-group-item"><strong>Valor Total (Telhado):</strong> <span id="resultTotalCostRoof"></span></li>
+        <li class="list-group-item"><strong>Valor Total (Solo):</strong> <span id="resultTotalCostGround"></span></li>
+    </ul>
+</div>
+
+<script>
+    document.getElementById('calculatorForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Obter o valor de entrada
+        const totalConsumption = parseFloat(document.getElementById('totalConsumption').value);
+
+        // Realizar cálculos
+        const averageMonthly = totalConsumption / 12;
+        const averageMonthlyWithBuffer = averageMonthly * 1.20;
+        const panelsNeeded = Math.round(averageMonthlyWithBuffer / 58.58); // assumindo que cada painel gera 58.58 KWH por mês, arredondado
+
+        const totalCostRoof = panelsNeeded * 1726.75; // custo fixo baseado nos dados fornecidos
+        const totalCostGround = panelsNeeded * 1872.70; // custo fixo baseado nos dados fornecidos
+
+        // Formatar valores para reais
+        const formatCurrency = (value) => {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        };
+
+        // Exibir resultados
+        document.getElementById('resultTotalConsumption').textContent = totalConsumption.toFixed(2);
+        document.getElementById('resultAverageMonthly').textContent = averageMonthly.toFixed(2);
+        document.getElementById('resultAverageMonthlyWithBuffer').textContent = averageMonthlyWithBuffer.toFixed(2);
+        document.getElementById('resultPanelsNeeded').textContent = panelsNeeded;
+        document.getElementById('resultTotalCostRoof').textContent = formatCurrency(totalCostRoof);
+        document.getElementById('resultTotalCostGround').textContent = formatCurrency(totalCostGround);
+
+        document.getElementById('resultList').style.display = 'block';
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
